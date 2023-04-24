@@ -4,7 +4,11 @@
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "npm run prod && npx gh-pages -d dist",
+    "dev": "webpack --mode development",
+    "prod": "webpack  --node-env=production",
+    "building": "webpack --config webpack.config.js",
+    "serve": "webpack serve"
   },
   "repository": {
     "type": "git",
@@ -22,6 +26,9 @@
     "@babel/preset-env": "^7.21.4",
     "babel-loader": "^9.1.2",
     "css-loader": "^6.7.3",
+    "eslint": "^8.39.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.27.5",
     "filemanager-webpack-plugin": "^8.0.0",
     "gh-pages": "^5.0.0",
     "html-loader": "^4.2.0",
