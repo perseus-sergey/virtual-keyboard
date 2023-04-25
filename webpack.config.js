@@ -47,7 +47,7 @@ module.exports = {
   ],
   devServer: {
     watchFiles: path.join(__dirname, 'src'),
-    port: 8090,
+    port: 8085,
   },
   module: {
     rules: [
