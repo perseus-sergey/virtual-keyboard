@@ -45,15 +45,20 @@ export class KeyBtn {
     'key-btn_bgcolor_blue',
   ];
 
-  // Key Button generator
-
   generateKeyButton(isEnglish = true, shifted = false) {
     // debugger;
-    const keyBtn = this.addBtnStyle
+    const keyBtn = (this.addBtnStyle)
       ? KeyBtn.generateDomElement('div', '', this.MAIN_BUTTON_STYLE, this.addBtnStyle)
       : KeyBtn.generateDomElement('div', '', this.MAIN_BUTTON_STYLE, this.generateRandomColor());
     const keyTitleUp = KeyBtn.generateDomElement('div', isEnglish ? this.engTitleUp : this.ukrTitleUp);
-    const keyTitleBottom = KeyBtn.generateDomElement('div', isEnglish ? this.engTitleBottom : this.ukrTitleBottom);
+
+    let isSpecialBtn = false;
+    if (this.addBtnStyle) {
+      isSpecialBtn = this.addBtnStyle.split(' ').includes('key-btn_special');
+    }
+    let keyText = isEnglish ? this.engTitleBottom : this.ukrTitleBottom;
+    keyText = (shifted && !isSpecialBtn) ? keyText.toUpperCase() : keyText.toLowerCase();
+    const keyTitleBottom = KeyBtn.generateDomElement('div', keyText);
 
     keyBtn.append(keyTitleUp);
     keyBtn.append(keyTitleBottom);

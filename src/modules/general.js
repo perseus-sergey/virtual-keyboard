@@ -1,42 +1,45 @@
 /* eslint-disable no-use-before-define */
+
+// TO DO: english layout
+// TO DO: remember keyboard layout
+// TO DO: physical click handler
+// TO DO: make commits
+// TO DO: pass the test
+// TO DO: check this task
+
 import { KeyBtn } from './KeyBtn';
 import { keys, rowNumbers } from './keys';
 
+let keyboard;
 let charReceiver;
+let isShift = false;
+let isCapsLock = false;
 const main = makeMain();
 const monitor = makeMonitor();
-const keyboard = makeKeyboard();
-
-keyboard.addEventListener('mousedown', keyClickHandler);
+keyboard = makeKeyboard();
 
 monitor.addEventListener('blur', () => {
   monitor.focus();
 });
 
-async function keyClickHandler(event) {
+function keyClickHandler(event) {
   const element = event.target.closest('.key-btn');
   if (element) {
     element.classList.add('key-btn_pressed');
     switch (element.dataset.code) {
       case 'Backspace': {
-        // debugger;
-        const startPos = monitor.selectionStart;
-        const startVal = monitor.value.substring(0, startPos - 1);
-        const endVal = monitor.value.substring(startPos, monitor.value.length);
-        monitor.value = startVal + endVal;
-        // monitor.selectionStart = monitor.selectionEnd = startPos - 1;
-        if (monitor.selectionStart) {
-          monitor.selectionStart = startPos - 1;
-          monitor.selectionEnd = monitor.selectionStart;
-        }
+        removeCharFromMonitorCursorPosition();
         break;
       }
       case 'CapsLock':
-        // monitor.value = monitor.value.substring(0, monitor.value.length - 1);
+        capsActivated();
+        document.querySelector('[data-code="CapsLock"]').classList.toggle('key-btn_shift-activated', isCapsLock);
         break;
       case 'ShiftLeft':
       case 'ShiftRight':
-        // monitor.value = monitor.value.substring(0, monitor.value.length - 1);
+        shiftActivated();
+        document.querySelector('[data-code="ShiftLeft"]').classList.toggle('key-btn_shift-activated', isShift);
+        document.querySelector('[data-code="ShiftRight"]').classList.toggle('key-btn_shift-activated', isShift);
         break;
       case 'ArrowUp': {
         monitor.selectionStart = 0;
@@ -65,36 +68,77 @@ async function keyClickHandler(event) {
       case 'AltRight':
         break;
       default: {
-        const monitorRect = monitor.getBoundingClientRect();
-        const centerYmonitor = (monitorRect.top + monitorRect.bottom) / 2;
-        const centerXmonitor = (monitorRect.left + monitorRect.right) / 2;
-        const moovingChar = KeyBtn.generateDomElement('div', element.textContent, 'mooving-char');
-
-        moovingChar.style.top = `${event.pageY * 0.9}px`;
-        moovingChar.style.left = `${event.pageX}px`;
-        document.body.append(moovingChar);
-
-        await new Promise((resolve) => setTimeout(resolve, 40));
-        moovingChar.classList.add('mooving-char_mooved');
-        moovingChar.style.transform = `translateY(${centerYmonitor - event.pageY}px) translateX(${centerXmonitor - event.pageX}px)`;
-        // moovingChar.style.transform = `translateY(${centerYmonitor - event.pageY}px)`;
-
-        await new Promise((resolve) => setTimeout(resolve, 300));
-        element.classList.remove('key-btn_pressed');
-        moovingChar.remove();
-        monitor.value += element.dataset.output || element.textContent;
+        makeAnimatedChar(element, event);
+        if (isShift) {
+          shiftActivated();
+        }
         break;
       }
     }
-    // console.log(keys.find((key) => key.keyCode === element.dataset.code));
-
-    element.addEventListener('mouseup', () => {
-      element.classList.remove('key-btn_pressed');
-    });
+    removeKeyBtnPressedClass(element);
   }
 }
 
-main.append(keyboard);
+function shiftActivated() {
+  if (isCapsLock) return;
+
+  isShift = !isShift;
+  keyboard = makeKeyboard();
+}
+
+function capsActivated() {
+  isCapsLock = !isCapsLock;
+  if (isShift) return;
+
+  keyboard = makeKeyboard();
+}
+
+async function makeAnimatedChar(element, event) {
+  const elemValue = element.dataset.output || element.textContent;
+  const charReceiverRect = charReceiver.getBoundingClientRect();
+  const centerXcharReceiver = (charReceiverRect.left + charReceiverRect.right) / 2;
+
+  const moovingChar = KeyBtn.generateDomElement('div', elemValue, 'mooving-char');
+  moovingChar.style.top = `${event.pageY * 0.9}px`;
+  moovingChar.style.left = `${event.pageX}px`;
+  moovingChar.style.color = window.getComputedStyle(element).color;
+  document.body.append(moovingChar);
+
+  await new Promise((resolve) => setTimeout(resolve, 30));
+  moovingChar.classList.add('mooving-char_mooved');
+  moovingChar.style.transform = `translateY(${charReceiverRect.bottom * 1.04 - event.pageY}px) translateX(${centerXcharReceiver - event.pageX}px)`;
+  // moovingChar.style.transform = `translateY(${centerYcharReceiver - event.pageY}px)`;
+
+  await new Promise((resolve) => setTimeout(resolve, 400));
+  moovingChar.remove();
+  insertCharIntoMonitorCursorPosition(element);
+}
+
+function insertCharIntoMonitorCursorPosition(element) {
+  const startPos = monitor.selectionStart;
+  const elemValue = element.dataset.output || element.textContent;
+  const startVal = monitor.value.substring(0, startPos) + elemValue;
+  const endVal = monitor.value.substring(startPos, monitor.value.length);
+  monitor.value = startVal + endVal;
+  monitor.selectionStart = startPos + 1;
+  monitor.selectionEnd = monitor.selectionStart;
+}
+
+function removeCharFromMonitorCursorPosition() {
+  const startPos = monitor.selectionStart;
+  const startVal = monitor.value.substring(0, startPos - 1);
+  const endVal = monitor.value.substring(startPos, monitor.value.length);
+  monitor.value = startVal + endVal;
+  if (monitor.selectionStart) {
+    monitor.selectionStart = startPos - 1;
+    monitor.selectionEnd = monitor.selectionStart;
+  }
+}
+
+async function removeKeyBtnPressedClass(element) {
+  await new Promise((resolve) => setTimeout(resolve, 400));
+  element.classList.remove('key-btn_pressed');
+}
 
 function makeMain() {
   const mainSection = KeyBtn.generateDomElement('main', '', 'main');
@@ -110,7 +154,6 @@ function makeMonitor() {
   const textArea = KeyBtn.generateDomElement('textarea', '', 'monitor__textarea');
 
   textArea.rows = 5;
-  // textArea.readOnly = true;
   textArea.autofocus = true;
 
   ecran.append(displayWrapper);
@@ -122,6 +165,7 @@ function makeMonitor() {
 }
 
 function makeKeyboard() {
+  if (keyboard) keyboard.remove();
   const arr = keys.slice();
   const kboard = KeyBtn.generateDomElement('section', '', 'keyboard');
   let start = 0;
@@ -129,9 +173,13 @@ function makeKeyboard() {
     const keybRow = KeyBtn.generateDomElement('div', '', 'keyboard__row');
     const keysSliced = arr.slice(start, start += rowNumbers[i]);
     keysSliced.forEach(
-      (key) => keybRow.append(key.generateKeyButton(false)),
+      (key) => keybRow.append(key.generateKeyButton(false, (isCapsLock || isShift))),
     );
     kboard.append(keybRow);
   }
+  main.append(kboard);
+
+  kboard.addEventListener('mousedown', keyClickHandler);
+
   return kboard;
 }
