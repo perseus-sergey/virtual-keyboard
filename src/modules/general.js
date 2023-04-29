@@ -153,7 +153,7 @@ function removeCharFromMonitorCursorPosition() {
 }
 
 async function removeKeyBtnPressedClass(element) {
-  await new Promise((resolve) => { setTimeout(resolve, 400); });
+  await new Promise((resolve) => { setTimeout(resolve, 150); });
   element.classList.remove('key-btn_pressed');
 }
 
@@ -208,3 +208,23 @@ function makeKeyboard() {
 function appendButtonIntoKeyboard(key) {
   keybRow.append(key.generateKeyButton(isEnglish, (isCapsLock || isShift)));
 }
+
+document.addEventListener('keydown', (event) => {
+  try {
+    document.querySelector(`[data-code="${event.code}"]`).classList.add('key-btn_pressed');
+  } catch (error) {
+    return;
+  }
+  setTimeout(() => {
+    document.querySelector(`[data-code="${event.code}"]`).classList.remove('key-btn_pressed');
+  }, 3000);
+});
+
+document.addEventListener('keyup', (event) => {
+  try {
+    document.querySelector(`[data-code="${event.code}"]`).classList.remove('key-btn_pressed');
+    return false;
+  } catch (error) {
+    return false;
+  }
+});
