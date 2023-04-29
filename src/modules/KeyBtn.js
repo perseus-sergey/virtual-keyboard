@@ -56,8 +56,14 @@ export class KeyBtn {
     if (this.addBtnStyle) {
       isSpecialBtn = this.addBtnStyle.split(' ').includes('key-btn_special');
     }
-    let keyText = isEnglish ? this.engTitleBottom : this.ukrTitleBottom;
-    keyText = (shifted && !isSpecialBtn) ? keyText.toUpperCase() : keyText.toLowerCase();
+    // let keyText = isEnglish ? this.engTitleBottom : this.ukrTitleBottom;
+    let keyText;
+    if (isEnglish) {
+      keyText = (shifted) ? this.engShift : this.engTitleBottom;
+    } else {
+      keyText = (shifted) ? this.ukrShift : this.ukrTitleBottom;
+    }
+    // keyText = (shifted && !isSpecialBtn) ? keyText.toUpperCase() : keyText.toLowerCase();
     const keyTitleBottom = KeyBtn.generateDomElement('div', keyText);
 
     keyBtn.append(keyTitleUp);

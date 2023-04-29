@@ -1,17 +1,22 @@
 /* eslint-disable no-use-before-define */
 
-// TO DO: english layout
+// TO DO: -- shift for digital/special buttons
+// TO DO: -- english layout
 // TO DO: remember keyboard layout
 // TO DO: physical click handler
 // TO DO: make commits
 // TO DO: pass the test
 // TO DO: check this task
+// TO DO: refactor the code
+// TO DO: -- show shortcut for layout switching
+// TO DO: -- show shortcut what OS used to make keyboard
 
 import { KeyBtn } from './KeyBtn';
 import { keys, rowNumbers } from './keys';
 
 let keyboard;
 let charReceiver;
+let isEnglish = false;
 let isShift = false;
 let isCapsLock = false;
 const main = makeMain();
@@ -40,6 +45,12 @@ function keyClickHandler(event) {
         shiftActivated();
         document.querySelector('[data-code="ShiftLeft"]').classList.toggle('key-btn_shift-activated', isShift);
         document.querySelector('[data-code="ShiftRight"]').classList.toggle('key-btn_shift-activated', isShift);
+        break;
+      case 'MetaLeft':
+      case 'MetaRight':
+        langSwitch();
+        // document.querySelector('[data-code="ShiftLeft"]').classList.toggle('key-btn_shift-activated', isShift);
+        // document.querySelector('[data-code="ShiftRight"]').classList.toggle('key-btn_shift-activated', isShift);
         break;
       case 'ArrowUp': {
         monitor.selectionStart = 0;
@@ -90,6 +101,11 @@ function capsActivated() {
   isCapsLock = !isCapsLock;
   if (isShift) return;
 
+  keyboard = makeKeyboard();
+}
+
+function langSwitch() {
+  isEnglish = !isEnglish;
   keyboard = makeKeyboard();
 }
 
@@ -150,14 +166,20 @@ function makeMonitor() {
   const ecran = KeyBtn.generateDomElement('section', '', 'monitor');
   const displayWrapper = KeyBtn.generateDomElement('div', '', 'monitor__display-wrapper');
   const display = KeyBtn.generateDomElement('div', '', 'monitor__display');
+  const receiverWrapper = KeyBtn.generateDomElement('div', '', 'monitor__receiver-wrapper');
+  const switchLang = KeyBtn.generateDomElement('p', '⌘ - switch language', 'monitor__os-marker');
   charReceiver = KeyBtn.generateDomElement('div', '', 'monitor__char-receiver');
+  const osMarker = KeyBtn.generateDomElement('p', 'Made in MacOS', 'monitor__os-marker');
   const textArea = KeyBtn.generateDomElement('textarea', '', 'monitor__textarea');
 
   textArea.rows = 5;
   textArea.autofocus = true;
 
   ecran.append(displayWrapper);
-  ecran.append(charReceiver);
+  ecran.append(receiverWrapper);
+  receiverWrapper.append(switchLang);
+  receiverWrapper.append(charReceiver);
+  receiverWrapper.append(osMarker);
   displayWrapper.append(display);
   display.append(textArea);
   main.append(ecran);
@@ -173,7 +195,7 @@ function makeKeyboard() {
     const keybRow = KeyBtn.generateDomElement('div', '', 'keyboard__row');
     const keysSliced = arr.slice(start, start += rowNumbers[i]);
     keysSliced.forEach(
-      (key) => keybRow.append(key.generateKeyButton(false, (isCapsLock || isShift))),
+      (key) => keybRow.append(key.generateKeyButton(isEnglish, (isCapsLock || isShift))),
     );
     kboard.append(keybRow);
   }
