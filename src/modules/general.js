@@ -1,20 +1,21 @@
 /* eslint-disable no-use-before-define */
 
-// TO DO: -- shift for digital/special buttons
-// TO DO: -- english layout
+// TO DO: --+ shift for digital/special buttons
+// TO DO: --+ english layout
 // TO DO: remember keyboard layout
 // TO DO: physical click handler
 // TO DO: make commits
 // TO DO: pass the test
 // TO DO: check this task
 // TO DO: refactor the code
-// TO DO: -- show shortcut for layout switching
-// TO DO: -- show shortcut what OS used to make keyboard
+// TO DO: --+ show shortcut for layout switching
+// TO DO: --+ show what OS used to make keyboard
 
 import { KeyBtn } from './KeyBtn';
 import { keys, rowNumbers } from './keys';
 
 let keyboard;
+let keybRow;
 let charReceiver;
 let isEnglish = false;
 let isShift = false;
@@ -49,8 +50,6 @@ function keyClickHandler(event) {
       case 'MetaLeft':
       case 'MetaRight':
         langSwitch();
-        // document.querySelector('[data-code="ShiftLeft"]').classList.toggle('key-btn_shift-activated', isShift);
-        // document.querySelector('[data-code="ShiftRight"]').classList.toggle('key-btn_shift-activated', isShift);
         break;
       case 'ArrowUp': {
         monitor.selectionStart = 0;
@@ -106,6 +105,8 @@ function capsActivated() {
 
 function langSwitch() {
   isEnglish = !isEnglish;
+  isShift = false;
+  isCapsLock = false;
   keyboard = makeKeyboard();
 }
 
@@ -120,12 +121,14 @@ async function makeAnimatedChar(element, event) {
   moovingChar.style.color = window.getComputedStyle(element).color;
   document.body.append(moovingChar);
 
-  await new Promise((resolve) => setTimeout(resolve, 30));
+  await new Promise((resolve) => {
+    setTimeout(resolve, 30);
+  });
   moovingChar.classList.add('mooving-char_mooved');
   moovingChar.style.transform = `translateY(${charReceiverRect.bottom * 1.04 - event.pageY}px) translateX(${centerXcharReceiver - event.pageX}px)`;
   // moovingChar.style.transform = `translateY(${centerYcharReceiver - event.pageY}px)`;
 
-  await new Promise((resolve) => setTimeout(resolve, 400));
+  await new Promise((resolve) => { setTimeout(resolve, 400); });
   moovingChar.remove();
   insertCharIntoMonitorCursorPosition(element);
 }
@@ -152,7 +155,7 @@ function removeCharFromMonitorCursorPosition() {
 }
 
 async function removeKeyBtnPressedClass(element) {
-  await new Promise((resolve) => setTimeout(resolve, 400));
+  await new Promise((resolve) => { setTimeout(resolve, 400); });
   element.classList.remove('key-btn_pressed');
 }
 
@@ -192,11 +195,9 @@ function makeKeyboard() {
   const kboard = KeyBtn.generateDomElement('section', '', 'keyboard');
   let start = 0;
   for (let i = 0; i < 5; i += 1) {
-    const keybRow = KeyBtn.generateDomElement('div', '', 'keyboard__row');
+    keybRow = KeyBtn.generateDomElement('div', '', 'keyboard__row');
     const keysSliced = arr.slice(start, start += rowNumbers[i]);
-    keysSliced.forEach(
-      (key) => keybRow.append(key.generateKeyButton(isEnglish, (isCapsLock || isShift))),
-    );
+    keysSliced.forEach((key) => appendButtonIntoKeyboard(key));
     kboard.append(keybRow);
   }
   main.append(kboard);
@@ -204,4 +205,8 @@ function makeKeyboard() {
   kboard.addEventListener('mousedown', keyClickHandler);
 
   return kboard;
+}
+
+function appendButtonIntoKeyboard(key) {
+  keybRow.append(key.generateKeyButton(isEnglish, (isCapsLock || isShift)));
 }

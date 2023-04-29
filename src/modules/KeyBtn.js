@@ -1,6 +1,5 @@
 export class KeyBtn {
   constructor(
-    // id,
     keyCode,
     engTitleBottom,
     engShift,
@@ -8,20 +7,13 @@ export class KeyBtn {
     ukrShift,
     addBtnStyle = '',
     output = '',
-    engTitleUp = '',
-    ukrTitleUp = '',
-    widthCss = '',
   ) {
-    // this.id = id;
     this.keyCode = keyCode;
-    this.engTitleUp = engTitleUp;
     this.engTitleBottom = engTitleBottom;
-    this.ukrTitleUp = ukrTitleUp;
     this.ukrTitleBottom = ukrTitleBottom;
     this.engShift = engShift;
     this.output = output;
     this.ukrShift = ukrShift;
-    this.widthCss = widthCss;
     this.addBtnStyle = addBtnStyle;
   }
 
@@ -50,23 +42,15 @@ export class KeyBtn {
     const keyBtn = (this.addBtnStyle)
       ? KeyBtn.generateDomElement('div', '', this.MAIN_BUTTON_STYLE, this.addBtnStyle)
       : KeyBtn.generateDomElement('div', '', this.MAIN_BUTTON_STYLE, this.generateRandomColor());
-    const keyTitleUp = KeyBtn.generateDomElement('div', isEnglish ? this.engTitleUp : this.ukrTitleUp);
 
-    let isSpecialBtn = false;
-    if (this.addBtnStyle) {
-      isSpecialBtn = this.addBtnStyle.split(' ').includes('key-btn_special');
-    }
-    // let keyText = isEnglish ? this.engTitleBottom : this.ukrTitleBottom;
     let keyText;
     if (isEnglish) {
       keyText = (shifted) ? this.engShift : this.engTitleBottom;
     } else {
       keyText = (shifted) ? this.ukrShift : this.ukrTitleBottom;
     }
-    // keyText = (shifted && !isSpecialBtn) ? keyText.toUpperCase() : keyText.toLowerCase();
     const keyTitleBottom = KeyBtn.generateDomElement('div', keyText);
 
-    keyBtn.append(keyTitleUp);
     keyBtn.append(keyTitleBottom);
 
     keyBtn.dataset.code = this.keyCode;
@@ -87,8 +71,8 @@ export class KeyBtn {
   }
 
   getRawColor(text) {
-    const arrText = text.split('_');
-    return arrText[arrText.length - 1];
+    this.arrText = text.split('_');
+    return this.arrText[this.arrText.length - 1];
   }
 
   static generateDomElement(tag, text = '', ...classes) {
@@ -99,7 +83,7 @@ export class KeyBtn {
       if (Array.isArray(el)) el.forEach((i) => arrClasses.push(i));
       else el.split(' ').forEach((e) => arrClasses.push(e));
     });
-    arrClasses.length && element.classList.add(...arrClasses);
+    if (arrClasses.length) element.classList.add(...arrClasses);
     element.textContent = text;
     return element;
   }
