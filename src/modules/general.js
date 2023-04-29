@@ -121,9 +121,7 @@ async function makeAnimatedChar(element, event) {
   moovingChar.style.color = window.getComputedStyle(element).color;
   document.body.append(moovingChar);
 
-  await new Promise((resolve) => {
-    setTimeout(resolve, 30);
-  });
+  await new Promise((resolve) => { setTimeout(resolve, 30); });
   moovingChar.classList.add('mooving-char_mooved');
   moovingChar.style.transform = `translateY(${charReceiverRect.bottom * 1.04 - event.pageY}px) translateX(${centerXcharReceiver - event.pageX}px)`;
   // moovingChar.style.transform = `translateY(${centerYcharReceiver - event.pageY}px)`;
