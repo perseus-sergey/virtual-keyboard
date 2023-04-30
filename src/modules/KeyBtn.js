@@ -77,7 +77,6 @@ export class KeyBtn {
 
   static generateDomElement(tag, text = '', ...classes) {
     const element = document.createElement(tag);
-    // debugger;
     const arrClasses = [];
     classes.forEach((el) => {
       if (Array.isArray(el)) el.forEach((i) => arrClasses.push(i));
