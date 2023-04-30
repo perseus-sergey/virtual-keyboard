@@ -3,8 +3,9 @@ import { keys, rowNumbers } from './keys';
 
 // TO DO: --+ shift for digital/special buttons
 // TO DO: --+ english layout
-// TO DO: remember keyboard layout
+// TO DO: --+ remember keyboard layout
 // TO DO: --+ physical click handler
+// TO DO: make mooving char with physical click
 // TO DO: make commits
 // TO DO: pass the test
 // TO DO: check this task
@@ -83,11 +84,14 @@ const makeComputer = {
     });
 
     document.addEventListener('keydown', (event) => {
+      const element = document.querySelector(`[data-code="${event.code}"]`);
       try {
-        document.querySelector(`[data-code="${event.code}"]`).classList.add('key-btn_pressed');
+        element.classList.add('key-btn_pressed');
       } catch (error) {
         return;
       }
+
+      this.keyClickHandler(event, element);
       setTimeout(() => {
         document.querySelector(`[data-code="${event.code}"]`).classList.remove('key-btn_pressed');
       }, 3000);
@@ -103,8 +107,7 @@ const makeComputer = {
     });
   },
 
-  keyClickHandler(event) {
-    const element = event.target.closest('.key-btn');
+  keyClickHandler(event, element = event.target.closest('.key-btn')) {
     if (element) {
       element.classList.add('key-btn_pressed');
       switch (element.dataset.code) {
@@ -153,7 +156,7 @@ const makeComputer = {
         case 'AltRight':
           break;
         default: {
-          this.makeAnimatedChar(element, event);
+          this.makeAnimatedChar(element);
           if (this.isShift) {
             this.shiftActivated();
           }
@@ -186,20 +189,24 @@ const makeComputer = {
     this.keyboard = this.makeKeyboard();
   },
 
-  async makeAnimatedChar(element, event) {
+  async makeAnimatedChar(element) {
     const elemValue = element.dataset.output || element.textContent;
     const charReceiverRect = this.charReceiver.getBoundingClientRect();
     const centerXcharReceiver = (charReceiverRect.left + charReceiverRect.right) / 2;
 
     const moovingChar = KeyBtn.generateDomElement('div', elemValue, 'mooving-char');
-    moovingChar.style.top = `${event.pageY * 0.9}px`;
-    moovingChar.style.left = `${event.pageX}px`;
+
+    const keyButoonRect = element.getBoundingClientRect();
+    const centerXkeyButoonRect = (keyButoonRect.left + keyButoonRect.right) / 2;
+
+    moovingChar.style.top = `${keyButoonRect.top}px`;
+    moovingChar.style.left = `${centerXkeyButoonRect}px`;
     moovingChar.style.color = window.getComputedStyle(element).color;
     document.body.append(moovingChar);
 
     await new Promise((resolve) => { setTimeout(resolve, 30); });
     moovingChar.classList.add('mooving-char_mooved');
-    moovingChar.style.transform = `translateY(${charReceiverRect.bottom * 1.04 - event.pageY}px) translateX(${centerXcharReceiver - event.pageX}px)`;
+    moovingChar.style.transform = `translateY(${charReceiverRect.bottom * 0.9 - keyButoonRect.top}px) translateX(${centerXcharReceiver - centerXkeyButoonRect}px)`;
 
     await new Promise((resolve) => { setTimeout(resolve, 400); });
     moovingChar.remove();
