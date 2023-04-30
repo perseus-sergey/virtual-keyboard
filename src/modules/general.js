@@ -5,7 +5,7 @@ import { keys, rowNumbers } from './keys';
 // TO DO: --+ english layout
 // TO DO: --+ remember keyboard layout
 // TO DO: --+ physical click handler
-// TO DO: make mooving char with physical click
+// TO DO: --+ make mooving char with physical click
 // TO DO: make commits
 // TO DO: pass the test
 // TO DO: check this task
@@ -87,7 +87,7 @@ const makeComputer = {
       event.preventDefault();
       const element = document.querySelector(`[data-code="${event.code}"]`);
       try {
-        // element.classList.add('key-btn_pressed');
+        element.classList.add('key-btn_pressed');
       } catch (error) {
         return;
       }
@@ -236,7 +236,7 @@ const makeComputer = {
   },
 
   async removeKeyBtnPressedClass(element) {
-    await new Promise((resolve) => { setTimeout(resolve, 150); });
+    await new Promise((resolve) => { setTimeout(resolve, 700); });
     element.classList.remove('key-btn_pressed');
   },
 

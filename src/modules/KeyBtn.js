@@ -41,7 +41,8 @@ export class KeyBtn {
     // debugger;
     const keyBtn = (this.addBtnStyle)
       ? KeyBtn.generateDomElement('div', '', this.MAIN_BUTTON_STYLE, this.addBtnStyle)
-      : KeyBtn.generateDomElement('div', '', this.MAIN_BUTTON_STYLE, this.generateRandomColor());
+      : KeyBtn.generateDomElement('div', '', this.MAIN_BUTTON_STYLE, ['key-btn_color_green', 'key-btn_bgcolor_orange']);
+      // : KeyBtn.generateDomElement('div', '', this.MAIN_BUTTON_STYLE, this.generateRandomColor());
 
     let keyText;
     if (isEnglish) {

@@ -28,7 +28,7 @@ export const keys = [
   new KeyBtn('KeyP', 'p', 'P', 'з', 'З'),
   new KeyBtn('BracketLeft', '[', '{', 'х', 'Х'),
   new KeyBtn('BracketRight', ']', '}', 'ї', 'Ї'),
-  new KeyBtn('Backslash', '\\', '|', 'ґ', 'Ґ', 'key-btn_digit'),
+  new KeyBtn('Backslash', '\\', '|', 'ґ', 'Ґ'),
   new KeyBtn('CapsLock', '⏏', '⏏', '⏏', '⏏', 'key-btn_special'),
   new KeyBtn('KeyA', 'a', 'A', 'ф', 'Ф'),
   new KeyBtn('KeyS', 's', 'S', 'и', 'И'),
