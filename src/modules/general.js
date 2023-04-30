@@ -84,9 +84,10 @@ const makeComputer = {
     });
 
     document.addEventListener('keydown', (event) => {
+      event.preventDefault();
       const element = document.querySelector(`[data-code="${event.code}"]`);
       try {
-        element.classList.add('key-btn_pressed');
+        // element.classList.add('key-btn_pressed');
       } catch (error) {
         return;
       }

@@ -103,7 +103,7 @@
 .key-btn {
   white-space: nowrap;
   font-size: $keyboardFontSize;
-  line-height: 4vw;
+  line-height: $keyboardLineHeight;
   user-select: none;
   width: 5vw;
   border-radius: 20%;
