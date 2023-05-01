@@ -19,6 +19,7 @@ const makeComputer = {
   keyboard: '',
   keybRow: '',
   charReceiver: '',
+  moovingCharColor: '',
   isEnglish: localStorage.getItem('isEnglish') !== '0',
   isShift: false,
   isCapsLock: false,
@@ -73,7 +74,7 @@ const makeComputer = {
     }
     this.main.append(kboard);
 
-    kboard.addEventListener('mousedown', (event) => this.keyClickHandler(event));
+    kboard.addEventListener('click', (event) => this.keyClickHandler(event));
 
     return kboard;
   },
@@ -97,20 +98,12 @@ const makeComputer = {
         document.querySelector(`[data-code="${event.code}"]`).classList.remove('key-btn_pressed');
       }, 3000);
     });
-
-    document.addEventListener('keyup', (event) => {
-      try {
-        document.querySelector(`[data-code="${event.code}"]`).classList.remove('key-btn_pressed');
-        return false;
-      } catch (error) {
-        return false;
-      }
-    });
   },
 
   keyClickHandler(event, element = event.target.closest('.key-btn')) {
     if (element) {
-      element.classList.add('key-btn_pressed');
+      this.moovingCharColor = window.getComputedStyle(element).color;
+      this.addKeyBtnPressedClass(element);
       switch (element.dataset.code) {
         case 'Backspace': {
           this.removeCharFromMonitorCursorPosition();
@@ -202,7 +195,7 @@ const makeComputer = {
 
     moovingChar.style.top = `${keyButoonRect.top}px`;
     moovingChar.style.left = `${centerXkeyButoonRect}px`;
-    moovingChar.style.color = window.getComputedStyle(element).color;
+    moovingChar.style.color = this.moovingCharColor;
     document.body.append(moovingChar);
 
     await new Promise((resolve) => { setTimeout(resolve, 30); });
@@ -235,8 +228,14 @@ const makeComputer = {
     }
   },
 
+  addKeyBtnPressedClass(element) {
+    element.classList.add('key-btn_pressed');
+    if (!element.classList.contains('key-btn_special')) element.classList.add('key-btn_transparent');
+  },
+
   async removeKeyBtnPressedClass(element) {
-    await new Promise((resolve) => { setTimeout(resolve, 700); });
+    await new Promise((resolve) => { setTimeout(resolve, 500); });
+    element.classList.remove('key-btn_transparent');
     element.classList.remove('key-btn_pressed');
   },
 

@@ -1,7 +1,6 @@
 * {
   margin: 0;
   padding: 0;
-  transition: 0.4s ease-in-out;
 }
 
 .body {
@@ -113,7 +112,7 @@
   justify-content: center;
   background-image: $keyBgColorDefault;
   @include fontColor($keyColorYellow);
-  // transition: 0.1s ease-in-out;
+  transition: transform 0.3s ease-in-out;
 
   &.key-btn_special {
     background-image: $keyBgColorDefault;
@@ -143,6 +142,11 @@
 
   &.key-btn_pressed {
     transform: scale(0.7);
+  }
+
+  &.key-btn_transparent {
+    color: transparent;
+    text-shadow: none;
   }
 
   &.key-btn_shift-activated {
@@ -205,6 +209,7 @@
   font-size: $keyboardFontSize;
   position: absolute;
   @include fontColor($keyColorYellow);
+  transition: 0.4s ease-in-out;
 }
 
 .mooving-char_mooved {
