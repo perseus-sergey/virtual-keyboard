@@ -1,18 +1,6 @@
 import { KeyBtn } from './KeyBtn';
 import { keys, rowNumbers } from './keys';
 
-// TO DO: --+ shift for digital/special buttons
-// TO DO: --+ english layout
-// TO DO: --+ remember keyboard layout
-// TO DO: --+ physical click handler
-// TO DO: --+ make mooving char with physical click
-// TO DO: make commits
-// TO DO: pass the test
-// TO DO: check this task
-// TO DO: refactor the code
-// TO DO: --+ show shortcut for layout switching
-// TO DO: --+ show what OS used to make keyboard
-
 const makeComputer = {
   main: '',
   monitor: '',
@@ -92,11 +80,7 @@ const makeComputer = {
       } catch (error) {
         return;
       }
-
       this.keyClickHandler(event, element);
-      setTimeout(() => {
-        document.querySelector(`[data-code="${event.code}"]`).classList.remove('key-btn_pressed');
-      }, 3000);
     });
   },
 
