@@ -11,6 +11,7 @@ const makeComputer = {
   isEnglish: localStorage.getItem('isEnglish') !== '0',
   isShift: false,
   isCapsLock: false,
+  isMeta: false,
 
   start() {
     this.makeMainSection();
@@ -30,7 +31,7 @@ const makeComputer = {
     const displayWrapper = KeyBtn.generateDomElement('div', '', 'monitor__display-wrapper');
     const display = KeyBtn.generateDomElement('div', '', 'monitor__display');
     const receiverWrapper = KeyBtn.generateDomElement('div', '', 'monitor__receiver-wrapper');
-    const switchLang = KeyBtn.generateDomElement('p', '⌘ - switch language', 'monitor__os-marker');
+    const switchLang = KeyBtn.generateDomElement('p', 'ctrl - switch language', 'monitor__os-marker');
     this.charReceiver = KeyBtn.generateDomElement('div', '', 'monitor__char-receiver');
     const osMarker = KeyBtn.generateDomElement('p', 'Made in MacOS', 'monitor__os-marker');
     const textArea = KeyBtn.generateDomElement('textarea', '', 'monitor__textarea');
@@ -61,27 +62,34 @@ const makeComputer = {
       kboard.append(this.keybRow);
     }
     this.main.append(kboard);
-
-    kboard.addEventListener('click', (event) => this.keyClickHandler(event));
-
     return kboard;
   },
 
   addListners() {
+    document.addEventListener('click', (event) => this.keyClickHandler(event));
+
     this.monitor.addEventListener('blur', () => {
       this.monitor.focus();
     });
 
     document.addEventListener('keydown', (event) => {
-      event.preventDefault();
-      const element = document.querySelector(`[data-code="${event.code}"]`);
-      try {
-        element.classList.add('key-btn_pressed');
-      } catch (error) {
-        return;
-      }
-      this.keyClickHandler(event, element);
+      if (!this.isMeta) this.keyDownHandler(event);
     });
+
+    document.addEventListener('keyup', () => {
+      this.isMeta = false;
+    });
+  },
+
+  keyDownHandler(event) {
+    event.preventDefault();
+    const element = document.querySelector(`[data-code="${event.code}"]`);
+    try {
+      element.classList.add('key-btn_pressed');
+    } catch (error) {
+      return;
+    }
+    this.keyClickHandler(event, element);
   },
 
   keyClickHandler(event, element = event.target.closest('.key-btn')) {
@@ -103,8 +111,8 @@ const makeComputer = {
           document.querySelector('[data-code="ShiftLeft"]').classList.toggle('key-btn_shift-activated', this.isShift);
           document.querySelector('[data-code="ShiftRight"]').classList.toggle('key-btn_shift-activated', this.isShift);
           break;
-        case 'MetaLeft':
-        case 'MetaRight':
+        case 'AltLeft':
+        case 'AltRight':
           this.langSwitch();
           break;
         case 'ArrowUp': {
@@ -130,8 +138,9 @@ const makeComputer = {
         }
         case 'Fn':
         case 'ControlLeft':
-        case 'AltLeft':
-        case 'AltRight':
+        case 'MetaLeft':
+        case 'MetaRight':
+          this.isMeta = true;
           break;
         default: {
           this.makeAnimatedChar(element);
