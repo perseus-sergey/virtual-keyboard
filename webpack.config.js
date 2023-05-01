@@ -2,6 +2,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 const FileManagerPlugin = require('filemanager-webpack-plugin');
+const PostcssPresetEnv = require('postcss-preset-env');
 
 const imgDir = path.resolve(__dirname, 'src/assets/img');
 const mode = process.env.NODE_ENV || 'development';
@@ -64,7 +65,7 @@ module.exports = {
             loader: 'postcss-loader',
             options: {
               postcssOptions: {
-                plugins: [require('postcss-preset-env')],
+                plugins: [PostcssPresetEnv],
               },
             },
           },
