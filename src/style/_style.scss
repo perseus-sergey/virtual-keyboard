@@ -1,0 +1,219 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.body {
+  background-color: $bodyBgColor;
+  background-image: $bodyBgImg;
+  background-attachment: fixed;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  margin: 0 auto;
+  max-width: 900px;
+  height: 90vh;
+  font-family: $keyboardFont;
+}
+
+.monitor {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2%;
+  margin-top: 1%;
+  padding: 1vh 1vw;
+  border-bottom: 1px solid #222c44;
+  background-color: $bodyBgColor;
+  box-shadow: 0 0 3vh #1d2539;
+  border-radius: 1vh;
+
+  .monitor__char-receiver {
+    width: 4vw;
+    height: 3vw;
+    border: 1vh solid #35456b;
+    border-radius: 40%;
+    background-image: linear-gradient(to bottom, #1a2133, #4d6398);
+  }
+
+  .monitor__receiver-wrapper {
+    display: flex;
+    font-family: "Lobster", cursive;
+    font-size: 2.5vw;
+    width: 90%;
+    align-items: center;
+    justify-content: space-between;
+    color: #7d869b;
+    text-shadow:
+      0px 4px 3px rgba(0, 0, 0, 0.4),
+      0px 8px 13px rgba(0, 0, 0, 0.1),
+      0px 18px 23px rgba(0, 0, 0, 0.1);
+  }
+
+  .monitor__display-wrapper {
+    width: 95%;
+    border-radius: 6px;
+    margin-bottom: 1vh;
+    padding: 1vw;
+    background-image: linear-gradient(to bottom, #1a2133, #4d6398);
+
+    .monitor__display {
+      text-align: center;
+      // padding: 2vw;
+      border-radius: 4px;
+      background-color: $displayColor;
+    }
+  }
+
+  .monitor__textarea {
+    font-size: $monitorFontSize;
+    color: #ffffff;
+    width: 96%;
+    background-color: $displayColor;
+    border-color: $displayColor;
+    resize: none;
+
+    &:focus-visible {
+      outline: 0;
+    }
+  }
+}
+
+.keyboard {
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+  gap: 2vh;
+
+  .keyboard__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5vw;
+
+  }
+}
+
+.key-btn {
+  white-space: nowrap;
+  font-size: $keyboardFontSize;
+  line-height: $keyboardLineHeight;
+  user-select: none;
+  width: 5vw;
+  border-radius: 20%;
+  box-shadow: 0px 1px #1a2133;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: $keyBgColorDefault;
+  @include fontColor($keyColorYellow);
+  transition: transform 0.3s ease-in-out;
+
+  &.key-btn_special {
+    background-image: $keyBgColorDefault;
+    width: 7vw;
+  }
+
+  &.key-btn_space {
+    @include fontColor($keyColorYellow);
+    width: 18vw;
+    border-radius: 5%;
+  }
+
+  &.key-btn_enter {
+    width: 10vw;
+    border-radius: 10%;
+  }
+
+  &.key-btn_arrow {
+    @include fontColor($keyColorPinc);
+  }
+
+  &.key-btn_digit,
+  &.key-btn_arrow {
+    @include fontColor($keyColorBlue);
+    background-image: $keyBgColorYellow;
+  }
+
+  &.key-btn_pressed {
+    transform: scale(0.7);
+  }
+
+  &.key-btn_transparent {
+    color: transparent;
+    text-shadow: none;
+  }
+
+  &.key-btn_shift-activated {
+    color: #1bf407;
+    text-shadow: 1.5px 1.5px 0 #222c44, 0.5px -0.5px 10px #fff;
+  }
+}
+
+.key-btn_bgcolor_yellow {
+  background-image: $keyBgColorYellow;
+}
+
+.key-btn_bgcolor_blue {
+  background-image: $keyBgColorBlue;
+}
+
+.key-btn_bgcolor_violet {
+  background-image: $keyBgColorViolet;
+}
+
+.key-btn_bgcolor_orange {
+  background-image: $keyBgColorOrange;
+}
+
+.key-btn_bgcolor_pinc {
+  background-image: $keyBgColorPinc;
+}
+
+.key-btn_bgcolor_green {
+  background-image: $keyBgColorGreen;
+}
+
+.key-btn_color_blue {
+  @include fontColor($keyColorBlue);
+}
+
+.key-btn_color_green {
+  @include fontColor($keyColorGreen);
+}
+
+.key-btn_color_yellow {
+  @include fontColor($keyColorYellow);
+}
+
+.key-btn_color_orange {
+  @include fontColor($keyColorOrange);
+}
+
+.key-btn_color_pinc {
+  @include fontColor($keyColorPinc);
+}
+
+.key-btn_color_violet {
+  @include fontColor($keyColorViolet);
+}
+
+.mooving-char {
+  visibility: visible;
+  font-family: $keyboardFont;
+  font-size: $keyboardFontSize;
+  position: absolute;
+  @include fontColor($keyColorYellow);
+  transition: 0.4s ease-in-out;
+}
+
+.mooving-char_mooved {
+  visibility: hidden;
+  font-size: 1vw;
+  color: #ffffff;
+}
